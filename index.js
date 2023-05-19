@@ -36,6 +36,12 @@ async function run() {
     const toyStoreCollection = client.db('toyStore').collection('store');
 
 
+    app.get('/toyStores', async(req, res) =>{
+      const result = await toyStoreCollection.find().limit(20).toArray();
+      res.send(result)
+    })
+
+
     app.post('/toyStores', async(req, res) =>{
       const body = req.body;
       const result = await toyStoreCollection.insertOne(body);
