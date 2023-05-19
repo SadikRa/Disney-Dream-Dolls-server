@@ -5,11 +5,8 @@ require("dotenv").config();
 const port = process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
-
 app.use(cors());
 app.use(express.json());
-
-
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.BD_PASS}@cluster0.ywq3nhp.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -48,14 +45,12 @@ async function run() {
       res.send(result);
     });
 
-
-    app.get('/toyStores/:id', async (req, res) => {
+    app.get("/toyStores/:id", async (req, res) => {
       const id = req.params.id;
-      const query = { _id: new ObjectId(id) }
+      const query = { _id: new ObjectId(id) };
       const result = await toyStoreCollection.findOne(query);
       res.send(result);
-  })
-
+    });
 
     app.get("/toyStores", async (req, res) => {
       const result = await toyStoreCollection
@@ -72,12 +67,30 @@ async function run() {
       res.send(result);
     });
 
-    app.delete('/toyStores/:id', async (req, res) => {
+    app.put("/toyStores/:id", async (req, res) => {
       const id = req.params.id;
-      const query = { _id: new ObjectId(id) }
+      const filter = { _id: new ObjectId(id) };
+      const option = { upsert: true };
+      const updateToy = req.body;
+
+      const toys = {
+        $set: {
+          price: updateToy.price,
+          availableQuantity:  updateToy.availableQuantity,
+          description:  updateToy.description
+        },
+      };
+
+      const result = await toyStoreCollection.updateOne(filter, toys, option);
+      res.send(result);
+    });
+
+    app.delete("/toyStores/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
       const result = await toyStoreCollection.deleteOne(query);
       res.send(result);
-  })
+    });
 
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
