@@ -53,10 +53,19 @@ async function run() {
     });
 
     app.get("/toyStores", async (req, res) => {
+      const sort = req.query.sort; // Get the sorting parameter from the query string
+      let sortOption = {};
+
+      if (sort === "price") {
+        sortOption = { price: 1 }; // Sort by price in ascending order
+      } else if (sort === "-price") {
+        sortOption = { price: -1 }; // Sort by price in descending order
+      }
+
       const result = await toyStoreCollection
         .find()
         .limit(20)
-        .sort({ createdAt: 1 })
+        .sort(sortOption)
         .toArray();
       res.send(result);
     });
@@ -76,13 +85,11 @@ async function run() {
       const toys = {
         $set: {
           price: updateToy.price,
-          availableQuantity:  updateToy.availableQuantity,
-          description:  updateToy.description
+          availableQuantity: updateToy.availableQuantity,
+          description: updateToy.description,
         },
       };
 
-
-      
       const result = await toyStoreCollection.updateOne(filter, toys, option);
       res.send(result);
     });
