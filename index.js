@@ -24,13 +24,13 @@ async function run() {
   try {
     const toyStoreCollection = client.db("toyStore").collection("store");
 
-    const indexKeys = { toyName: 1, subCategory: 1 };
-    const indexOptions = { name: "sellerSubCategory" };
+    // const indexKeys = { toyName: 1, subCategory: 1 };
+    // const indexOptions = { name: "sellerSubCategory" };
 
-    const result = await toyStoreCollection.createIndex(
-      indexKeys,
-      indexOptions
-    );
+    // const result = await toyStoreCollection.createIndex(
+    //   indexKeys,
+    //   indexOptions
+    // );
 
     app.get("/getSearchToy/:text", async (req, res) => {
       const text = req.params.text;
@@ -53,13 +53,13 @@ async function run() {
     });
 
     app.get("/toyStores", async (req, res) => {
-      const sort = req.query.sort; // Get the sorting parameter from the query string
+      const sort = req.query.sort; 
       let sortOption = {};
 
       if (sort === "price") {
-        sortOption = { price: 1 }; // Sort by price in ascending order
+        sortOption = { price: 1 }; 
       } else if (sort === "-price") {
-        sortOption = { price: -1 }; // Sort by price in descending order
+        sortOption = { price: -1 }; 
       }
 
       const result = await toyStoreCollection
@@ -102,12 +102,12 @@ async function run() {
     });
 
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
+    // await client.db("admin").command({ ping: 1 });
+    // console.log(
+    //   "Pinged your deployment. You successfully connected to MongoDB!"
+    // );
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
